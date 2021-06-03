@@ -7,9 +7,9 @@ use strict;
 use warnings;
 
 # Host and port of webslinger
-my $webslingerHost = 'us.itrsgroup.com:55593';
+my $webslingerHost = 'host:port';
 # WebSlinger attribute list.  This should match the configured webslinger VIEW_PATH
-my @attributes = ('Location','Environment','Department','Type');
+my @attributes = ('ENV','REGION','APPLICATION');
 #---------------------------------------------
 # If you create a symlink to this action and name it to contain escalate then it
 # will set this flag for use in the subject if it is used in an action
@@ -54,16 +54,8 @@ For more information on problem resolutions, escalation procedures and contact n
 #---------------------------------------------
 # Create a smart subject
 
-#-----
-# Create shorthand severity to be used in subject 
-# Will look like (OK),( C),( W),(EC),(EW) 
-$sev = $ENV{'_SEVERITY'} eq 'OK' ? 'OK' : $escalate . substr($ENV{'_SEVERITY'},0,1); 
 
-# subject will look like
-#  (OK) Production nysupsvr02 cpu.percentutilisation
-$subject = sprintf "(%2s) %s %s", $sev,
-    defined $ENV{'Environment'} ? $ENV{'Environment'} : '',
-    defined $ENV{'_SUBJECT'} ? $ENV{'_SUBJECT'} : "$ENV{'_HOSTNAME'} $ENV{'_VARIABLE'} ";
+$subject = sprintf "Start of Day Checks";
 #---------------------------------------------
 
 open (OUT, "> $outputFile" ) or die "Cannot open $outputFile: $!\n";
@@ -80,9 +72,7 @@ print OUT $infoMessage;
 # Start the html table
 &printStartTable('Details');
 &printRow('Gateway',$ENV{'_GATEWAY'});
-&printRow('Managed Entity',$ENV{'_MANAGED_ENTITY'});
-&printRow('Box',$ENV{'_HOSTNAME'});
-&printRow('Host',$ENV{'_NETPROBE_HOST'});
+
 
 #&printSpanLine('&nbsp;');
 
@@ -97,9 +87,7 @@ my $color =
 
 #&printSpanLine('&nbsp;');
 
-&printRow('Variable',$ENV{'_VARIABLE'});
-&printRow('Value',$ENV{'_VALUE'});
-&printRow('Comment',$ENV{'_COMMENT'});
+
 &printEndTable;
 #_____________________________________________
 
